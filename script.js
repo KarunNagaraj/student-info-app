@@ -13,21 +13,25 @@ function validateEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
+function validatePhone(phone) {
+    return /^\d{10}$/.test(phone.trim());
+}
+
 form.addEventListener('submit', function(event) {
     event.preventDefault();
 
     const name = document.getElementById('name').value;
     const id = document.getElementById('id').value;
     const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
 
-    // Input validation
     if (!validateName(name)) {
-        alert('Please enter a valid name (letters and spaces only).');
+        alert('Please enter a valid name using letters and spaces only.');
         return;
     }
 
     if (!validateId(id)) {
-        alert('Please enter a valid Student ID (numbers only).');
+        alert('Please enter a valid numeric Student ID.');
         return;
     }
 
@@ -36,10 +40,16 @@ form.addEventListener('submit', function(event) {
         return;
     }
 
+    if (!validatePhone(phone)) {
+        alert('Please enter a valid 10-digit phone number.');
+        return;
+    }
+
     const student = {
         name: name.trim(),
         id: id.trim(),
-        email: email.trim()
+        email: email.trim(),
+        phone: phone.trim()
     };
 
     const detailsDiv = document.getElementById('studentDetails');
@@ -49,22 +59,24 @@ form.addEventListener('submit', function(event) {
         <p><strong>Name:</strong> ${student.name}</p>
         <p><strong>ID:</strong> ${student.id}</p>
         <p><strong>Email:</strong> ${student.email}</p>
-        <button id="toggleDetails" type="button">Hide Details</button>
+        <p><strong>Phone:</strong> ${student.phone}</p>
+        <button id="toggleDetails" type="button">
+            Hide Details
+        </button>
     `;
 
-    // Toggle show/hide for student details
     const toggleBtn = document.getElementById('toggleDetails');
     const detailParagraphs = detailsDiv.querySelectorAll('p');
 
     toggleBtn.addEventListener('click', function() {
-        detailParagraphs.forEach(function(p) {
-            if (p.style.display === 'none') {
-                p.style.display = '';
-                toggleBtn.textContent = 'Hide Details';
-            } else {
-                p.style.display = 'none';
-                toggleBtn.textContent = 'Show Details';
-            }
+        const detailsAreHidden =
+            detailParagraphs[0].style.display === 'none';
+
+        detailParagraphs.forEach(function(paragraph) {
+            paragraph.style.display = detailsAreHidden ? '' : 'none';
         });
+
+        toggleBtn.textContent =
+            detailsAreHidden ? 'Hide Details' : 'Show Details';
     });
 });
